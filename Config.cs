@@ -7,6 +7,7 @@ public sealed class ModConfig
      public int VanillaMultiplier { get; set; } = 1;
      public int ModdedMultiplier { get; set; } = 0;
      public bool EnableBlacklist { get; set; } = true;
+     public int MoneyPrize { get; set; } = 0;
 
      public int PriceMax { get; set; } = -1;
      public int PriceMin { get; set; } = 0;

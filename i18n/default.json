@@ -14,6 +14,9 @@
   "GMCM.EnableBlacklist.Name": "Enable Blacklist",
   "GMCM.EnableBlacklist.Tooltip": "Whether or not to enable the item blacklist. WARNING: This will allow the obtaining of certain broken items.",
   
+  "GMCM.MoneyPrize.Name": "Treasure Gold Reward",
+  "GMCM.MoneyPrize.Tooltip": "How much Gold to receive upon fishing up a treasure chest.",
+  
   "GMCM.PriceMin.Name": "Price Minimum",
   "GMCM.PriceMin.Tooltip": "The minimum price a treasure item can be.",
   

@@ -131,6 +131,14 @@ public class ModEntry : Mod
         
         menu.AddNumberOption(
 	        mod: ModManifest,
+	        name: () => Helper.Translation.Get("GMCM.MoneyPrize.Name"),
+	        tooltip: () => Helper.Translation.Get("GMCM.MoneyPrize.Tooltip"),
+	        getValue: () => Config.MoneyPrize,
+	        setValue: v => Config.MoneyPrize = v
+        );
+        
+        menu.AddNumberOption(
+	        mod: ModManifest,
 	        name: () => Helper.Translation.Get("GMCM.PriceMin.Name"),
 	        tooltip: () => Helper.Translation.Get("GMCM.PriceMin.Tooltip"),
 	        getValue: () => Config.PriceMin,

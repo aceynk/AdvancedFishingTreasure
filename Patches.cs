@@ -368,6 +368,8 @@ public class Patches
 
             ItemGrabMenu itemMenu = new ItemGrabMenu(inventory, ItemGrabMenu.source_fishingChest).setEssential(true);
             
+            Game1.player.Money += ModEntry.Config.MoneyPrize;
+            
             Game1.activeClickableMenu = itemMenu;
         }
     }
