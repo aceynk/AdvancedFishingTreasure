@@ -17,14 +17,40 @@
   "GMCM.MoneyPrize.Name": "Treasure Gold Reward",
   "GMCM.MoneyPrize.Tooltip": "How much Gold to receive upon fishing up a treasure chest.",
   
+  "GMCM.VanillaFluctuation.Name": "Treasure Chance Fluctuation",
+  "GMCM.VanillaFluctuation.Tooltip": "Whether or not to include vanilla fluctuations in treasure chest change (like magnet bait).",
+  
   "GMCM.PriceMin.Name": "Price Minimum",
   "GMCM.PriceMin.Tooltip": "The minimum price a treasure item can be.",
   
   "GMCM.PriceMax.Name": "Price Maximum",
   "GMCM.PriceMax.Tooltip": "The maximum price a treasure item can be. Use negative numbers to set no maximum.",
   
+  "GMCM.AllowSilver.Name": "Allow Silver Quality Items",
+  "GMCM.AllowSilver.Tooltip": "Whether or not to allow silver quality items in treasure chests.",
+  
+  "GMCM.SilverProb.Name": "Silver Quality Probability",
+  "GMCM.SilverProb.Tooltip": "The probability for silver quality items. Evaluated AFTER gold and iridium.",
+
+  "GMCM.AllowGold.Name": "Allow Gold Quality Items",
+  "GMCM.AllowGold.Tooltip": "Whether or not to allow gold quality items in treasure chests.",
+
+  "GMCM.GoldProb.Name": "Gold Quality Probability",
+  "GMCM.GoldProb.Tooltip": "The probability for gold quality items. Evaluated AFTER iridium.",
+
+  "GMCM.AllowIridium.Name": "Allow Iridium Quality Items",
+  "GMCM.AllowIridium.Tooltip": "Whether or not to allow iridium quality items in treasure chests.",
+
+  "GMCM.IridiumProb.Name": "Iridium Quality Probability",
+  "GMCM.IridiumProb.Tooltip": "The probability for iridium quality items. Evaluated FIRST.",
+  
   "GMCM.IncludeModded.Name": "Include Modded Items",
   "GMCM.IncludeModded.Tooltip": "Whether to include non-vanilla fishing treasure chest items. Takes precedence.",
+  
+  "GMCM.AllowedContext.Name": "Included Context Tags",
+  "GMCM.AllowedContext.Tooltip": "Context Tags to add to the loot pool. Separate with \",\". If an item is already allowed by category, it will have a bonus chance via context tags. (FINICKY)",
+  "GMCM.ContextProb.Name": "Context Tag Inclusion Chance",
+  "GMCM.ContextProb.Tooltip": "Chance to include an item from the list of context tags. (FINICKY)",
 
   "GMCM.IncludeExpBooks.Name": "Include Exp Books",
   "GMCM.IncludeExpBooks.Tooltip": "Whether to include Exp Books in the modded item loot-table.",

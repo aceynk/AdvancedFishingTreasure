@@ -8,10 +8,19 @@ public sealed class ModConfig
      public int ModdedMultiplier { get; set; } = 0;
      public bool EnableBlacklist { get; set; } = true;
      public int MoneyPrize { get; set; } = 0;
-
+     public bool VanillaFluctuation { get; set; } = true;
      public int PriceMax { get; set; } = -1;
      public int PriceMin { get; set; } = 0;
 
+     public bool AllowSilver { get; set; } = false;
+     public int SilverProb { get; set; } = 0;
+     public bool AllowGold { get; set; } = false;
+     public int GoldProb { get; set; } = 0;
+     public bool AllowIridium { get; set; } = false;
+     public int IridiumProb { get; set; } = 0;
+
+     public string AllowedContext { get; set; } = "";
+     public int ContextProb { get; set; } = 0;
      public bool IncludeModded { get; set; } = false; //Overrides other Include configs
      public bool IncludeExpBooks { get; set; } = false;
      public int ExpBooksChance { get; set; } = 5;

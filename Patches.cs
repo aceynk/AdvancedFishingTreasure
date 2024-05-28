@@ -13,6 +13,7 @@ using StardewValley.GameData.Pants;
 using StardewValley.GameData.Shirts;
 using StardewValley.GameData.Tools;
 using StardewValley.GameData.Weapons;
+using StardewValley.Internal;
 using StardewValley.ItemTypeDefinitions;
 using StardewValley.Menus;
 using StardewValley.Objects;
@@ -25,14 +26,16 @@ public class Patches
 {
     public class TreasureMenuPatch
     {
-        public static void Prefix(int remainingFish)
+        public static void Prefix(int remainingFish, FishingRod __instance)
         {
             if (!ModEntry.Config.ModEnabled)
             {
                 return;
             }
+            
+            double chestChance = ModEntry.getTreasureChance(__instance);
 
-            FishingRod.baseChanceForTreasure = ModEntry.Config.ChestChance / 100f;
+            FishingRod.baseChanceForTreasure = chestChance / 100.0;
         }
         
         public static void Postfix(int remainingFish, FishingRod __instance)
@@ -209,6 +212,27 @@ public class Patches
                             categoryInventory.Add(new Clothing(rnd.ChooseFrom(ikeys)));
                         }
                     }
+
+                    if (rnd.Next(0, 100) < ModEntry.Config.ContextProb && ModEntry.Config.AllowedContext != "")
+                    {
+                        List<string> includeContext = ModEntry.Config.AllowedContext.Split(",").ToList();
+                        string chosenTag = rnd.ChooseFrom(includeContext);
+                        if (chosenTag == "")
+                        {
+                            chosenTag = includeContext[0];
+                        }
+                        
+                        List<string> lootPool = ModEntry.GetAllItemsWithContextTags(new List<string> { chosenTag });
+
+                        try
+                        {
+                            categoryInventory.Add(ItemRegistry.Create(rnd.ChooseFrom(lootPool)));
+                        }
+                        catch (Exception e)
+                        {
+                            ModEntry._log.Log("Failed to load a category item", LogLevel.Trace);
+                        }
+                    }
                 }
             }
 
@@ -363,6 +387,49 @@ public class Patches
                     }
                 }
             }
+
+            List<int> validQualities = new() { -81, -80, -79, -75, -23, -18, -17, -4 };
+            List<string> artisanIDs = new() { "(O)348", "(O)303", "(O)346", "(O)459", "(O)424", "(O)426", "(O)SmokedFish" };
+            List<string> blacklistedIncludeIds = new() { "(O)812" };
+            
+            foreach (Object item in inventory)
+            {
+                if (ModEntry.Config.EnableBlacklist && blacklistedIncludeIds.Contains(item.QualifiedItemId))
+                {
+                    continue;
+                }
+                
+                if (validQualities.Contains(item.Category) || artisanIDs.Contains(item.QualifiedItemId))
+                {
+                    if (ModEntry.Config.AllowIridium && rnd.Next(0, 100) < ModEntry.Config.IridiumProb)
+                    {
+                        item.Quality = 4;
+                    }
+                    else if (ModEntry.Config.AllowGold && rnd.Next(0, 100) < ModEntry.Config.GoldProb)
+                    {
+                        item.Quality = 2;
+                    }
+                    else if (ModEntry.Config.AllowSilver && rnd.Next(0, 100) < ModEntry.Config.SilverProb)
+                    {
+                        item.Quality = 1;
+                    }
+                }
+            }
+            
+            /*
+             * -81 : Greens (Wild Horseradish, Daffodil)
+             * -80 : Flowers (Sweet Pea, Crocus)
+             * -79 : Fruit (Coconut, Cactus Fruit)
+             * -75 : Vegetables (Parsnip, Green Bean)
+             * -23 : Fishing Items (Nautilus Shell, Coral)
+             * -18 : Special Animal Goods (Wool, Duck Feather)
+             * -17 : Special Farming Items (Sweet Gem Berry, Truffle)
+             * -4 : Fish (Pufferfish, Anchovy)
+             */
+            
+            // ^^ The above categories can have qualities... + some artisan goods:
+            // Wine  , Pale Ale, Beer  , Mead  , Cheese, Goat Cheese
+            // (O)348, (O)303  , (O)346, (O)459, (O)424, (O)426
 
             inventory = inventory.Where(v => ModEntry.Config.PriceMin <= v.sellToStorePrice() / v.Stack && (v.sellToStorePrice() / v.Stack <= ModEntry.Config.PriceMax || ModEntry.Config.PriceMax <= -1)).ToList();
 

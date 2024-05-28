@@ -14,6 +14,7 @@ using StardewValley.GameData.Objects;
 using StardewValley.Locations;
 using StardewValley.Objects;
 using StardewValley.Tools;
+using StardewValley.WorldMaps;
 using Item = StardewValley.Item;
 using Object = StardewValley.Object;
 
@@ -26,7 +27,7 @@ public class ModEntry : Mod
         _log.Log(v, LogLevel.Debug);
     }
 
-    private static IMonitor _log = null!;
+    public static IMonitor _log = null!;
     public static Dictionary<string, List<IdItemPair>> CachedItems = new();
     public static ModConfig Config;
     public static List<string> Blacklisted = new()
@@ -55,8 +56,8 @@ public class ModEntry : Mod
             var treasureFunc =
                 AccessTools.Method(typeof(FishingRod), nameof(FishingRod.openTreasureMenuEndFunction));
             var postFunc = SymbolExtensions.GetMethodInfo((int remainingFish, FishingRod __instance) => Patches.TreasureMenuPatch.Postfix(remainingFish, __instance));
-            var preFunc = SymbolExtensions.GetMethodInfo((int remainingFish) =>
-                Patches.TreasureMenuPatch.Prefix(remainingFish));
+            var preFunc = SymbolExtensions.GetMethodInfo((int remainingFish, FishingRod __instance) =>
+                Patches.TreasureMenuPatch.Prefix(remainingFish, __instance));
             
             //var grabMenuFunc = AccessTools.Method(typeof(ItemGrabMenu), nameof(ItemGrabMenu));
             //var preFunc = SymbolExtensions.GetMethodInfo((IList<Item> inventory, object context) => Patches.GrabMenuPatch.Prefix(inventory, context));
@@ -137,6 +138,14 @@ public class ModEntry : Mod
 	        setValue: v => Config.MoneyPrize = v
         );
         
+        menu.AddBoolOption(
+	        mod: ModManifest,
+	        name: () => Helper.Translation.Get("GMCM.VanillaFluctuation.Name"),
+	        tooltip: () => Helper.Translation.Get("GMCM.VanillaFluctuation.Tooltip"),
+	        getValue: () => Config.VanillaFluctuation,
+	        setValue: value => Config.VanillaFluctuation = value
+        );
+        
         menu.AddNumberOption(
 	        mod: ModManifest,
 	        name: () => Helper.Translation.Get("GMCM.PriceMin.Name"),
@@ -153,8 +162,80 @@ public class ModEntry : Mod
 	        setValue: v => Config.PriceMax = v
         );
         
+        menu.AddNumberOption(
+	        mod: ModManifest,
+	        name: () => Helper.Translation.Get($"GMCM.ChestChance.Name"),
+	        tooltip: () => Helper.Translation.Get($"GMCM.ChestChance.Tooltip"),
+	        getValue: () => Config.ChestChance,
+	        setValue: value => Config.ChestChance = value,
+	        min: 0,
+	        max: 100
+        );
+        
+        // QUALITY
+        
+        menu.AddSectionTitle(
+	        mod: ModManifest,
+	        text: () => "Quality",
+	        tooltip: () => "Evaluated Iridium to Normal."
+        );
+        
+        menu.AddBoolOption(
+	        mod: ModManifest,
+	        name: () => Helper.Translation.Get("GMCM.AllowSilver.Name"),
+	        tooltip: () => Helper.Translation.Get("GMCM.AllowSilver.Tooltip"),
+	        getValue: () => Config.AllowSilver,
+	        setValue: value => Config.AllowSilver = value
+        );
+        
+        menu.AddNumberOption(
+	        mod: ModManifest,
+	        name: () => Helper.Translation.Get("GMCM.SilverProb.Name"),
+	        tooltip: () => Helper.Translation.Get("GMCM.SilverProb.Tooltip"),
+	        getValue: () => Config.SilverProb,
+	        setValue: v => Config.SilverProb = v,
+	        min: 0,
+	        max: 100
+        );
+        
+        menu.AddBoolOption(
+	        mod: ModManifest,
+	        name: () => Helper.Translation.Get("GMCM.AllowGold.Name"),
+	        tooltip: () => Helper.Translation.Get("GMCM.AllowGold.Tooltip"),
+	        getValue: () => Config.AllowGold,
+	        setValue: value => Config.AllowGold = value
+        );
+        
+        menu.AddNumberOption(
+	        mod: ModManifest,
+	        name: () => Helper.Translation.Get("GMCM.GoldProb.Name"),
+	        tooltip: () => Helper.Translation.Get("GMCM.GoldProb.Tooltip"),
+	        getValue: () => Config.GoldProb,
+	        setValue: v => Config.GoldProb = v,
+	        min: 0,
+	        max: 100
+        );
+        
+        menu.AddBoolOption(
+	        mod: ModManifest,
+	        name: () => Helper.Translation.Get("GMCM.AllowIridium.Name"),
+	        tooltip: () => Helper.Translation.Get("GMCM.AllowIridium.Tooltip"),
+	        getValue: () => Config.AllowIridium,
+	        setValue: value => Config.AllowIridium = value
+        );
+        
+        menu.AddNumberOption(
+	        mod: ModManifest,
+	        name: () => Helper.Translation.Get("GMCM.IridiumProb.Name"),
+	        tooltip: () => Helper.Translation.Get("GMCM.IridiumProb.Tooltip"),
+	        getValue: () => Config.IridiumProb,
+	        setValue: v => Config.IridiumProb = v,
+	        min: 0,
+	        max: 100
+        );
+        
+        
         // INCLUDED ITEMS
-
 
         foreach (var property in typeof(ModConfig).GetProperties())
         {
@@ -170,21 +251,40 @@ public class ModEntry : Mod
 	        }
 	        else if (property.PropertyType == typeof(int) && property.Name.EndsWith("Chance"))
 	        {
-		        menu.AddNumberOption(
-			        mod: ModManifest,
-			        name: () => Helper.Translation.Get($"GMCM.{property.Name}.Name"),
-			        tooltip: () => Helper.Translation.Get($"GMCM.{property.Name}.Tooltip"),
-			        getValue: () => (int)property.GetValue(Config)!,
-			        setValue: value => property.SetValue(Config, value),
-			        min: 0,
-			        max: 100
-		        );
+		        if (property.Name != "ChestChance")
+			        menu.AddNumberOption(
+				        mod: ModManifest,
+				        name: () => Helper.Translation.Get($"GMCM.{property.Name}.Name"),
+				        tooltip: () => Helper.Translation.Get($"GMCM.{property.Name}.Tooltip"),
+				        getValue: () => (int)property.GetValue(Config)!,
+				        setValue: value => property.SetValue(Config, value),
+				        min: 0,
+				        max: 100
+			        );
 
 		        if (property.Name == "ChestChance")
 		        {
 			        menu.AddSectionTitle(
 				        mod: ModManifest,
 				        text: () => "Included Items"
+			        );
+			        
+			        menu.AddTextOption(
+				        mod: ModManifest,
+				        name: () => Helper.Translation.Get("GMCM.AllowedContext.Name"),
+				        tooltip: () => Helper.Translation.Get("GMCM.AllowedContext.Tooltip"),
+				        getValue: () => Config.AllowedContext,
+				        setValue: v => Config.AllowedContext = v
+			        );
+		        
+			        menu.AddNumberOption(
+				        mod: ModManifest,
+				        name: () => Helper.Translation.Get("GMCM.ContextProb.Name"),
+				        tooltip: () => Helper.Translation.Get("GMCM.ContextProb.Tooltip"),
+				        getValue: () => Config.ContextProb,
+				        setValue: v => Config.ContextProb = v,
+				        min: 0,
+				        max: 100
 			        );
 		        }
 	        }
@@ -217,7 +317,7 @@ public class ModEntry : Mod
     private void GameStarted(object? sender, SaveLoadedEventArgs svArgs)
     {
         InitItemCache();
-        FishingRod.baseChanceForTreasure = Config.ChestChance / 100f;
+        FishingRod.baseChanceForTreasure = Config.ChestChance / 100.0;
     }
 
     public class IdItemPair
@@ -314,6 +414,39 @@ public class ModEntry : Mod
         Log($"GetItemsByCategory called with category {category}");
 
         return CachedItems[category];
+    }
+
+    public static double getTreasureChance(FishingRod rod)
+    {
+	    if (!Config.VanillaFluctuation) return Config.ChestChance;
+
+	    double chance = Config.ChestChance;
+	    Object? bait = rod.GetBait(); // MAKE SURE TO CHECK FOR NULL
+	    List<Object?> tackle = rod.GetTackle(); // PROBABLY ALSO CAN BE NULL
+
+	    if (bait is null) {}
+	    else if (bait.ItemId == "(O)703")
+	    {
+		    chance += 15;
+	    }
+
+	    foreach (Object tack in tackle)
+	    {
+		    if (tack is null) continue;
+		    if (tack.ItemId == "(O)693")
+		    {
+			    chance += 5;
+		    }
+	    }
+
+	    if (Game1.player.professions.Contains(Farmer.pirate))
+	    {
+		    chance += 15;
+	    }
+	    
+	    chance += Game1.player.LuckLevel * 0.5;
+
+	    return Math.Min(100.0, chance);
     }
 
     private static List<IdItemPair> GetItemsByCategory(int category)
