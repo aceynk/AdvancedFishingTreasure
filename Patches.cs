@@ -392,7 +392,7 @@ public class Patches
             List<string> artisanIDs = new() { "(O)348", "(O)303", "(O)346", "(O)459", "(O)424", "(O)426", "(O)SmokedFish" };
             List<string> blacklistedIncludeIds = new() { "(O)812" };
             
-            foreach (Object item in inventory)
+            foreach (Item item in inventory)
             {
                 if (ModEntry.Config.EnableBlacklist && blacklistedIncludeIds.Contains(item.QualifiedItemId))
                 {
