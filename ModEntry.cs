@@ -347,6 +347,17 @@ public class ModEntry : Mod
             {
                 CachedItems.Add(thisCategory, new List<IdItemPair>());
             }
+
+            if (!CachedItems.ContainsKey("-96") && obj.Type == "Ring")
+            {
+	            CachedItems.Add("-96", new List<IdItemPair>());
+            }
+
+            if (obj.Type == "Ring" || key == "801")
+            {
+	            CachedItems["-96"].Add(cacheObj);
+	            continue;
+            }
             
             CachedItems[thisCategory].Add(cacheObj);
         }

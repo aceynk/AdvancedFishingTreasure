@@ -148,7 +148,15 @@ public class Patches
                     {
                         if (rnd.Next(0, 100) < Chances[ind])
                         {
-                            string newId = rnd.ChooseFrom(ModEntry.CachedItems[CategoryIds.Values.ToList()[ind]]).id;
+                            string newId;
+                            
+                            if (CategoryIds.Keys.ToList()[ind] == "Rings")
+                            {
+                                newId = rnd.ChooseFrom(ModEntry.CachedItems["-96"]).id;
+                                modInventory.Add(new Object(newId, 1));
+                                continue;
+                            }
+                            newId = rnd.ChooseFrom(ModEntry.CachedItems[CategoryIds.Values.ToList()[ind]]).id;
                             modInventory.Add(new Object(newId, 1));
                         }
                     }
