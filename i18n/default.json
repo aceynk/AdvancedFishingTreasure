@@ -192,6 +192,11 @@
   "GMCM.GemsChance.Name": "Gem Chance",
   "GMCM.GemsChance.Tooltip": "The chance to get a Gem.",
 
+  "GMCM.IncludeArtifacts.Name": "Include Artifacts",
+  "GMCM.IncludeArtifacts.Tooltip": "Whether to include Artifacts in the modded item loot-table.",
+  "GMCM.ArtifactsChance.Name": "Artifact Chance",
+  "GMCM.ArtifactsChance.Tooltip": "The chance to get an Artifact.",
+
   "GMCM.IncludeSpecial.Name": "Include Special Items (Quest?)",
   "GMCM.IncludeSpecial.Tooltip": "Whether to include Special/Quest Items in the modded item loot-table.",
   "GMCM.SpecialChance.Name": "Special Items (Quest?) Chance",

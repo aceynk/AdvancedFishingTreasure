@@ -78,6 +78,8 @@ public sealed class ModConfig
      public int FishChance { get; set; } = 20;
      public bool IncludeGems { get; set; } = false;
      public int GemsChance { get; set; } = 5;
+     public bool IncludeArtifacts { get; set; } = false;
+     public int ArtifactsChance { get; set; } = 5;
      public bool IncludeSpecial { get; set; } = false;
      public int SpecialChance { get; set; } = 1;
 

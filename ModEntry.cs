@@ -359,6 +359,18 @@ public class ModEntry : Mod
 	            continue;
             }
             
+            if (!CachedItems.ContainsKey("Arch") && obj.Type == "Arch")
+            {
+	            CachedItems.Add("Arch", new List<IdItemPair>());
+            }
+
+            if (obj.Type == "Arch")
+            {
+	            Log("Added new artifact");
+	            CachedItems["Arch"].Add(cacheObj);
+	            continue;
+            }
+            
             CachedItems[thisCategory].Add(cacheObj);
         }
 

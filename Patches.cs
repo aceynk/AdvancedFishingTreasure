@@ -1,19 +1,12 @@
 
-using System.Collections;
-using System.Collections.Immutable;
-using System.Runtime.CompilerServices;
-using Microsoft.Xna.Framework;
 using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Extensions;
 using StardewValley.GameData.BigCraftables;
-using StardewValley.GameData.Machines;
-using StardewValley.GameData.Objects;
 using StardewValley.GameData.Pants;
 using StardewValley.GameData.Shirts;
 using StardewValley.GameData.Tools;
 using StardewValley.GameData.Weapons;
-using StardewValley.Internal;
 using StardewValley.ItemTypeDefinitions;
 using StardewValley.Menus;
 using StardewValley.Objects;
@@ -107,6 +100,7 @@ public class Patches
                     { "Eggs", "-5" },
                     { "Fish", "-4" },
                     { "Gems", "-2" },
+                    { "Artifacts", "Arch" },
                     { "Special", "0" }
                 };
                 List<int> Chances = new()
@@ -139,6 +133,7 @@ public class Patches
                     ModEntry.Config.EggsChance * (ModEntry.Config.IncludeEggs ? 1 : 0),
                     ModEntry.Config.FishChance * (ModEntry.Config.IncludeFish ? 1 : 0),
                     ModEntry.Config.GemsChance * (ModEntry.Config.IncludeGems ? 1 : 0),
+                    ModEntry.Config.ArtifactsChance * (ModEntry.Config.IncludeArtifacts ? 1 : 0),
                     ModEntry.Config.SpecialChance * (ModEntry.Config.IncludeSpecial ? 1 : 0),
                 };
 
@@ -150,12 +145,16 @@ public class Patches
                         {
                             string newId;
                             
-                            if (CategoryIds.Keys.ToList()[ind] == "Rings")
+                            if (CategoryIds.Values.ToList()[ind] == "Arch")
                             {
-                                newId = rnd.ChooseFrom(ModEntry.CachedItems["-96"]).id;
+                                List<string> test = ModEntry.CachedItems["Arch"].Select(x => x.obj.DisplayName).ToList();
+                                ModEntry.Log(string.Join(", ", test));
+                                
+                                newId = rnd.ChooseFrom(ModEntry.CachedItems["Arch"]).id;
                                 modInventory.Add(new Object(newId, 1));
                                 continue;
                             }
+                            
                             newId = rnd.ChooseFrom(ModEntry.CachedItems[CategoryIds.Values.ToList()[ind]]).id;
                             modInventory.Add(new Object(newId, 1));
                         }
