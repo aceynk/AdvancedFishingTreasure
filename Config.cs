@@ -18,7 +18,11 @@ public sealed class ModConfig
      public int GoldProb { get; set; } = 0;
      public bool AllowIridium { get; set; } = false;
      public int IridiumProb { get; set; } = 0;
-
+     
+     public int GoldPrizeMult { get; set; } = 2;
+     public int GoldPriceMaxMult { get; set; } = 2;
+     public int GoldBonusRolls { get; set; } = 1;
+     
      public string AllowedContext { get; set; } = "";
      public int ContextProb { get; set; } = 0;
      public bool IncludeModded { get; set; } = false; //Overrides other Include configs

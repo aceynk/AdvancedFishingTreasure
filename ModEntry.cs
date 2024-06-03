@@ -234,6 +234,43 @@ public class ModEntry : Mod
 	        max: 100
         );
         
+        // GOLDEN TREASURE CHESTS
+        
+        menu.AddSectionTitle(
+	        mod: ModManifest,
+	        text: () => "Golden Treasure Chests",
+	        tooltip: () => "Config options to customize the bonuses of golden treasure chests."
+        );
+        
+        menu.AddNumberOption(
+	        mod: ModManifest,
+	        name: () => Helper.Translation.Get("GMCM.GoldPrizeMult.Name"),
+	        tooltip: () => Helper.Translation.Get("GMCM.GoldPrizeMult.Tooltip"),
+	        getValue: () => Config.GoldPrizeMult,
+	        setValue: v => Config.GoldPrizeMult = v,
+	        min: 0,
+	        max: 10
+        );
+        
+        menu.AddNumberOption(
+	        mod: ModManifest,
+	        name: () => Helper.Translation.Get("GMCM.GoldPriceMaxMult.Name"),
+	        tooltip: () => Helper.Translation.Get("GMCM.GoldPriceMaxMult.Tooltip"),
+	        getValue: () => Config.GoldPriceMaxMult,
+	        setValue: v => Config.GoldPriceMaxMult = v,
+	        min: -1,
+	        max: 20
+        );
+        
+        menu.AddNumberOption(
+	        mod: ModManifest,
+	        name: () => Helper.Translation.Get("GMCM.GoldBonusRolls.Name"),
+	        tooltip: () => Helper.Translation.Get("GMCM.GoldBonusRolls.Tooltip"),
+	        getValue: () => Config.GoldBonusRolls,
+	        setValue: v => Config.GoldBonusRolls = v,
+	        min: 0,
+	        max: 10
+        );
         
         // INCLUDED ITEMS
 
@@ -366,7 +403,6 @@ public class ModEntry : Mod
 
             if (obj.Type == "Arch")
             {
-	            Log("Added new artifact");
 	            CachedItems["Arch"].Add(cacheObj);
 	            continue;
             }

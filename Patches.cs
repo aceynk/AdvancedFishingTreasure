@@ -33,6 +33,19 @@ public class Patches
         
         public static void Postfix(int remainingFish, FishingRod __instance)
         {
+            int vanillaRoll = ModEntry.Config.VanillaMultiplier;
+            int moddedRoll = ModEntry.Config.ModdedMultiplier;
+            int priceMax = ModEntry.Config.PriceMax;
+            int prize = ModEntry.Config.MoneyPrize;
+
+            if (__instance.goldenTreasure)
+            {
+                vanillaRoll += ModEntry.Config.GoldBonusRolls;
+                moddedRoll += ModEntry.Config.GoldBonusRolls;
+                priceMax *= ModEntry.Config.GoldPriceMaxMult;
+                prize *= ModEntry.Config.GoldPrizeMult;
+            }
+            
             if (!ModEntry.Config.ModEnabled)
             {
                 return;
@@ -46,7 +59,7 @@ public class Patches
             
             List<Item> vanillaLoot = new();
 
-            for (int i = 0; i < ModEntry.Config.VanillaMultiplier; i++)
+            for (int i = 0; i < vanillaRoll; i++)
             {
                 vanillaLoot = vanillaLoot.Concat(ModEntry.GetVanillaGrabMenu(__instance, remainingFish)).ToList();
             }
@@ -137,7 +150,7 @@ public class Patches
                     ModEntry.Config.SpecialChance * (ModEntry.Config.IncludeSpecial ? 1 : 0),
                 };
 
-                for (int i = 0; i < ModEntry.Config.ModdedMultiplier; i++)
+                for (int i = 0; i < moddedRoll; i++)
                 {
                     foreach (var ind in Enumerable.Range(0, Chances.Count - 1))
                     {
@@ -147,9 +160,6 @@ public class Patches
                             
                             if (CategoryIds.Values.ToList()[ind] == "Arch")
                             {
-                                List<string> test = ModEntry.CachedItems["Arch"].Select(x => x.obj.DisplayName).ToList();
-                                ModEntry.Log(string.Join(", ", test));
-                                
                                 newId = rnd.ChooseFrom(ModEntry.CachedItems["Arch"]).id;
                                 modInventory.Add(new Object(newId, 1));
                                 continue;
@@ -161,7 +171,7 @@ public class Patches
                     }
                 }
 
-                for (int i = 0; i < ModEntry.Config.ModdedMultiplier; i++)
+                for (int i = 0; i < moddedRoll; i++)
                 {
                     if (ModEntry.Config.IncludeBigCraft)
                     {
@@ -438,11 +448,11 @@ public class Patches
             // Wine  , Pale Ale, Beer  , Mead  , Cheese, Goat Cheese
             // (O)348, (O)303  , (O)346, (O)459, (O)424, (O)426
 
-            inventory = inventory.Where(v => ModEntry.Config.PriceMin <= v.sellToStorePrice() / v.Stack && (v.sellToStorePrice() / v.Stack <= ModEntry.Config.PriceMax || ModEntry.Config.PriceMax <= -1)).ToList();
+            inventory = inventory.Where(v => ModEntry.Config.PriceMin <= v.sellToStorePrice() / v.Stack && (v.sellToStorePrice() / v.Stack <= priceMax || priceMax <= -1)).ToList();
 
             ItemGrabMenu itemMenu = new ItemGrabMenu(inventory, ItemGrabMenu.source_fishingChest).setEssential(true);
             
-            Game1.player.Money += ModEntry.Config.MoneyPrize;
+            Game1.player.Money += prize;
             
             Game1.activeClickableMenu = itemMenu;
         }
