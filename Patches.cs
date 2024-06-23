@@ -3,6 +3,7 @@ using StardewModdingAPI;
 using StardewValley;
 using StardewValley.Extensions;
 using StardewValley.GameData.BigCraftables;
+using StardewValley.GameData.Objects;
 using StardewValley.GameData.Pants;
 using StardewValley.GameData.Shirts;
 using StardewValley.GameData.Tools;
@@ -120,7 +121,7 @@ public class Patches
                 {
                     ModEntry.Config.ExpBooksChance * (ModEntry.Config.IncludeExpBooks ? 1 : 0),
                     ModEntry.Config.SkillBooksChance * (ModEntry.Config.IncludeSkillBooks ? 1 : 0),
-                    ModEntry.Config.RingsChance * (ModEntry.Config.IncludeRings ? 1 : 0),
+                    //ModEntry.Config.RingsChance * (ModEntry.Config.IncludeRings ? 1 : 0),
                     ModEntry.Config.GreensChance * (ModEntry.Config.IncludeGreens ? 1 : 0),
                     ModEntry.Config.FlowersChance * (ModEntry.Config.IncludeFlowers ? 1 : 0),
                     ModEntry.Config.FruitChance * (ModEntry.Config.IncludeFruit ? 1 : 0),
@@ -173,6 +174,17 @@ public class Patches
 
                 for (int i = 0; i < moddedRoll; i++)
                 {
+                    if (ModEntry.Config.IncludeRings)
+                    {
+                        if (rnd.Next(0, 100) < ModEntry.Config.RingsChance)
+                        {
+                            List<ModEntry.IdItemPair> idata = ModEntry.CachedItems["-96"];
+                            IList<string> ikeys = idata.Select(v => v.id).ToList();
+                            
+                            categoryInventory.Add(ItemRegistry.Create("(R)" + rnd.ChooseFrom(ikeys), 1));
+                        }
+                    }
+                    
                     if (ModEntry.Config.IncludeBigCraft)
                     {
                         if (rnd.Next(0, 100) < ModEntry.Config.BigCraftChance)
@@ -247,7 +259,7 @@ public class Patches
                         }
                         catch (Exception e)
                         {
-                            ModEntry._log.Log("Failed to load a category item", LogLevel.Trace);
+                            ModEntry._log.Log("Failed to load a category item", LogLevel.Debug);
                         }
                     }
                 }
@@ -268,6 +280,9 @@ public class Patches
             {
                 inventory = inventory.Where(v => !ModEntry.Blacklisted.Contains(v.QualifiedItemId)).ToList();
             }
+            
+            // null guard
+            inventory.Where(v => v != null).ToList();
             
             /* Patch for:
              [SmokedFish] DONE y
@@ -299,7 +314,11 @@ public class Patches
 
                     if (cItem.QualifiedItemId == "(O)SpecificBait")
                     {
-                        Object flavor = new Object(rnd.ChooseFrom(ModEntry.CachedItems["-4"].Where(v => !v.obj.ContextTags.Contains("fish_crab_pot")).ToList()).id, 1);
+                        Object flavor = new Object(rnd.ChooseFrom(ModEntry.CachedItems["-4"]
+                            .Where(v => !v.obj.ContextTags.Contains("fish_crab_pot"))
+                            .ToList())
+                            .id
+                            , 1);
                         Item newItem = new ObjectDataDefinition().CreateFlavoredBait(flavor);
 
                         newItem.Stack = cItem.Stack;

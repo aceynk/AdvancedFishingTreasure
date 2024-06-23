@@ -375,10 +375,13 @@ public class ModEntry : Mod
         
         foreach (string key in itemData.Keys)
         {
-	        ObjectData obj = itemData[key];
+	        ObjectData? obj = itemData[key];
             string thisCategory = obj.Category.ToString();
 
-            IdItemPair cacheObj = new IdItemPair(key, obj);
+            IdItemPair? cacheObj = new IdItemPair(key, obj);
+
+            // null guard
+            if (cacheObj == null || cacheObj.obj == null) continue;
             
             if (!CachedItems.ContainsKey(thisCategory))
             {
@@ -392,6 +395,7 @@ public class ModEntry : Mod
 
             if (obj.Type == "Ring" || key == "801")
             {
+	            cacheObj.obj.Category = Object.ringCategory;
 	            CachedItems["-96"].Add(cacheObj);
 	            continue;
             }
