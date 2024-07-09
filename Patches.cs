@@ -88,7 +88,7 @@ public class Patches
                 {
                     { "ExpBooks", "-103" },
                     { "SkillBooks", "-102" },
-                    { "Rings", "-96" },
+                    //{ "Rings", "-96" },
                     { "Greens", "-81" },
                     { "Flowers", "-80" },
                     { "Fruit", "-79" },
