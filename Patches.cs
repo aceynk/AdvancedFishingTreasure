@@ -469,7 +469,8 @@ public class Patches
 
             inventory = inventory.Where(v => ModEntry.Config.PriceMin <= v.sellToStorePrice() / v.Stack && (v.sellToStorePrice() / v.Stack <= priceMax || priceMax <= -1)).ToList();
 
-            ItemGrabMenu itemMenu = new ItemGrabMenu(inventory, ItemGrabMenu.source_fishingChest).setEssential(true);
+            ItemGrabMenu itemMenu = new ItemGrabMenu(inventory).setEssential(true);
+            itemMenu.source = ItemGrabMenu.source_fishingChest;
             
             Game1.player.Money += prize;
             
