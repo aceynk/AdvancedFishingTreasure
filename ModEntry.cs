@@ -720,7 +720,7 @@ public class ModEntry : Mod
 					possibles.Add(390);
 				}
 				possibles.Add(382);
-				Item treasure = ItemRegistry.Create(Game1.random.ChooseFrom(possibles).ToString(), Game1.random.Next(2, 7) * ((!(Game1.random.NextDouble() < 0.05 + (double)(int)who.luckLevel * 0.015)) ? 1 : 2));
+				Item treasure = ItemRegistry.Create(Game1.random.ChooseFrom(possibles).ToString(), Game1.random.Next(2, 7) * ((!(Game1.random.NextDouble() < 0.05 + (double)(int)who.LuckLevel * 0.015)) ? 1 : 2));
 				if (Game1.random.NextDouble() < 0.05 + (double)who.LuckLevel * 0.03)
 				{
 					treasure.Stack *= 2;
@@ -927,7 +927,7 @@ public class ModEntry : Mod
 				treasures.Add(roe);
 			}
 		}
-		if ((int)Game1.player.fishingLevel > 4 && Game1.player.stats.Get("FishingTreasures") > 2 && Game1.random.NextDouble() < 0.02 + ((!Game1.player.mailReceived.Contains("roeBookDropped")) ? ((double)Game1.player.stats.Get("FishingTreasures") * 0.001) : 0.001))
+		if ((int)Game1.player.FishingLevel > 4 && Game1.player.stats.Get("FishingTreasures") > 2 && Game1.random.NextDouble() < 0.02 + ((!Game1.player.mailReceived.Contains("roeBookDropped")) ? ((double)Game1.player.stats.Get("FishingTreasures") * 0.001) : 0.001))
 		{
 			treasures.Add(ItemRegistry.Create("(O)Book_Roe"));
 			Game1.player.mailReceived.Add("roeBookDropped");
